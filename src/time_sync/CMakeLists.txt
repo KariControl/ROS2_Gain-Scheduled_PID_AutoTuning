@@ -11,8 +11,9 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(controller_msgs REQUIRED)
 find_package(message_filters REQUIRED)
+find_package(ackermann_msgs REQUIRED)
+find_package(gs_controller_msgs REQUIRED)
 
 # パッケージのsrcの中での必要なcppファイルを記載
 add_executable(time_sync
@@ -26,7 +27,8 @@ ament_target_dependencies(time_sync
   geometry_msgs
   sensor_msgs
   message_filters
-  controller_msgs
+  ackermann_msgs
+  gs_controller_msgs
 )
 
 # ヘッダーファイル(include)のパスを通すために必要な処理

@@ -1,6 +1,7 @@
 #include "control_sim/controller_node.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
-#include "geometry_msgs/msg/accel_stamped.hpp"
+#include "sensor_msgs/msg/imu.hpp"
+#include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
 
 ControllerNode::ControllerNode(
   const rclcpp::NodeOptions& options
@@ -13,39 +14,62 @@ ControllerNode::ControllerNode(
     this->declare_parameter("set_point", 0.1);  // デフォルト値として1.0を設定
     this->declare_parameter("kp", 0.2);         // デフォルト値として0.1を設定
     this->declare_parameter("ki", 0.3);        // デフォルト値として0.01を設定
-    this->declare_parameter("kd", 0.05);        // デフォルト値として0.05を設定
     this->declare_parameter("dt", 0.01);        // デフォルト値として0.05を設定
+
+    this->declare_parameter("a1", 0.0);        // 比例ゲインスケジュール則ハイパーパラメータ1
+    this->declare_parameter("a2", 0.0);        // 比例ゲインスケジュール則ハイパーパラメータ2
+    this->declare_parameter("a3", 0.01);        // 比例ゲインスケジュール則ハイパーパラメータ3
+
+    this->declare_parameter("b1", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ1
+    this->declare_parameter("b2", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ2
+    this->declare_parameter("b3", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ3
 
     this->get_parameter("set_point",setpoint_);
     this->get_parameter("kp",kp_);
     this->get_parameter("ki",ki_);
-    this->get_parameter("kd",kd_);
     this->get_parameter("dt",dt_);
 
-    controller_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("vehicle_velocity", 1, std::bind(&ControllerNode::state_callback, this, std::placeholders::_1));
-    controller_publisher_ = this->create_publisher<geometry_msgs::msg::AccelStamped>("accel", 1);
+    this->get_parameter("a1",a1_);
+    this->get_parameter("a2",a2_);
+    this->get_parameter("a3",a3_);
 
-    using namespace std::literals::chrono_literals; // これが無いと、create_wall_timer等での100msとかの時間単位付きの変数を指定できない
-    timer_ = this->create_wall_timer(100ms, std::bind(&ControllerNode::timer_callback, this));
+    this->get_parameter("b1",b1_);
+    this->get_parameter("b2",b2_);
+    this->get_parameter("b3",b3_);
+
+    velocity_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("vehicle_velocity", 1, std::bind(&ControllerNode::Gain_scheduled_callback, this, std::placeholders::_1));
+    target_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("reference_signal", 1, std::bind(&ControllerNode::reference_callback, this, std::placeholders::_1));
+    yaw_rate_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>("vehicle_state", 1, std::bind(&ControllerNode::yaw_rate_callback, this, std::placeholders::_1));
+
+    controller_publisher_ = this->create_publisher<ackermann_msgs::msg::AckermannDriveStamped>("steering", 1);
+
+    using namespace std::literals::chrono_literals; 
+    timer_ = this->create_wall_timer(10ms, std::bind(&ControllerNode::timer_callback, this));
 }
-void ControllerNode::state_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
+void ControllerNode::Gain_scheduled_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
     velocity_ = msg->twist.linear.x;
+    kp_=a1_+a2_*velocity_+a3_*velocity_*velocity_;
+    ki_=b1_+b2_*velocity_+b3_*velocity_*velocity_;
+}
+void ControllerNode::yaw_rate_callback(const sensor_msgs::msg::Imu::SharedPtr msg) {
+    yaw_rate_ = msg->angular_velocity.z;
+}
+void ControllerNode::reference_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
+    setpoint_ = msg->twist.angular.z;
 }
 void ControllerNode::timer_callback() {
-    double error = setpoint_ - velocity_;
+    double error;
     static double pre_integral_ = 0.0;
-    static double last_error_ = 0.0;
- 
+    double output; 
+
+    error=setpoint_ - yaw_rate_;
     integral_= pre_integral_+error * dt_;
-    double derivative = (error - last_error_) / dt_;
-    double output = kp_ * error + ki_ * integral_ + kd_ * derivative;
-
+    output= kp_ * error + ki_ * integral_;
     pre_integral_ = integral_;
-    last_error_=error;
 
-    geometry_msgs::msg::AccelStamped output_msg;
+    ackermann_msgs::msg::AckermannDriveStamped output_msg;
     output_msg.header.stamp = this->now();
     output_msg.header.frame_id = "base_link";
-    output_msg.accel.linear.x = output;
+    output_msg.drive.steering_angle = output;
     controller_publisher_->publish(output_msg);
 }

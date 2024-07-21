@@ -4,7 +4,7 @@
 #include <deque>
 #include <eigen3/Eigen/Dense>
 #include <rclcpp/rclcpp.hpp>
-#include <controller_msgs/msg/plant_info.hpp>
+#include <gs_controller_msgs/msg/gs_controller.hpp>
 
 class PID_Tuner : public rclcpp::Node
 {
@@ -19,7 +19,7 @@ public:
 
 
 private:
-    void tuning_callback(const controller_msgs::msg::PlantInfo::SharedPtr msg);
+    void tuning_callback(const gs_controller_msgs::msg::GsController::SharedPtr msg);
     double compute_ve(double u);//参照モデルTd1の計算処理
     double compute_vu(double u);//参照モデルTd2の計算処理
 
@@ -31,8 +31,8 @@ private:
     double time_constant_;//参照モデルの時定数
     int mode_selector_;
 
-    rclcpp::Subscription<controller_msgs::msg::PlantInfo>::SharedPtr subscription_;
-    rclcpp::Publisher<controller_msgs::msg::PlantInfo>::SharedPtr test_publisher_;
+    rclcpp::Subscription<gs_controller_msgs::msg::GsController>::SharedPtr subscription_;
+    rclcpp::Publisher<gs_controller_msgs::msg::GsController>::SharedPtr test_publisher_;
 
     double diff_time_;//差分時間
     double k1;//ルンゲクッタ中間変数1

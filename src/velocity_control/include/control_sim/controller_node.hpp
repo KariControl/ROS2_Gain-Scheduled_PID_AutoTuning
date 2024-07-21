@@ -1,7 +1,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
-#include "geometry_msgs/msg/accel_stamped.hpp"
+#include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 
 class ControllerNode : public rclcpp::Node
 {
@@ -16,18 +17,28 @@ public:
 
 private:
   void timer_callback();
-  void state_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
+  void Gain_scheduled_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
+  void yaw_rate_callback(const sensor_msgs::msg::Imu::SharedPtr msg);
+  void reference_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
 
-  rclcpp::Publisher<geometry_msgs::msg::AccelStamped>::SharedPtr controller_publisher_;
-  rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr controller_subscriber_;
+  rclcpp::Publisher<ackermann_msgs::msg::AckermannDriveStamped>::SharedPtr controller_publisher_;
+  rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr velocity_subscriber_;
+  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr yaw_rate_subscriber_;
+  rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr target_subscriber_;
   rclcpp::TimerBase::SharedPtr timer_;
   
   double steering_angle_;
   double velocity_;
+  double yaw_rate_;
   double kp_;
   double ki_;
-  double kd_;
   double dt_;
   double setpoint_;
   double integral_;
+  double a1_;
+  double a2_;
+  double a3_;
+  double b1_;
+  double b2_;
+  double b3_;
 };

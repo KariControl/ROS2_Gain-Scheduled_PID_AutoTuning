@@ -1,5 +1,5 @@
 #include "pid_tuner_node.hpp"
-#include <controller_msgs/msg/plant_info.hpp>
+#include <gs_controller_msgs/msg/gs_controller.hpp>
 #include <deque>
 #include <eigen3/Eigen/Dense>
 #include <rclcpp/rclcpp.hpp>
@@ -24,10 +24,10 @@ PID_Tuner::PID_Tuner(
     this->declare_parameter("mode_selector", 0); // 制御器の切り替え
     this->get_parameter("mode_selector", mode_selector_);
 
-    subscription_ = this->create_subscription<controller_msgs::msg::PlantInfo>("plant_info", 10, std::bind(&PID_Tuner::tuning_callback, this, std::placeholders::_1));
-    test_publisher_ = this->create_publisher<controller_msgs::msg::PlantInfo>("Compute_Td", 1); // Td out
+    subscription_ = this->create_subscription<gs_controller_msgs::msg::GsController>("plant_info", 10, std::bind(&PID_Tuner::tuning_callback, this, std::placeholders::_1));
+    test_publisher_ = this->create_publisher<gs_controller_msgs::msg::GsController>("Compute_Td", 1); // Td out
 }
-void PID_Tuner::tuning_callback(const controller_msgs::msg::PlantInfo::SharedPtr msg)
+void PID_Tuner::tuning_callback(const gs_controller_msgs::msg::GsController::SharedPtr msg)
 {
     x_data_.push_back(msg->output-compute_ve(msg->output)); // 受信したデータをx_data_に保存する処理、ここをVRFTに合わせて変更：(1-Td)y
     y_data_.push_back(compute_vu(msg->input));                // 受信したデータをy_data_に保存する処理、ここをVRFTに合わせて変更：Tdu
