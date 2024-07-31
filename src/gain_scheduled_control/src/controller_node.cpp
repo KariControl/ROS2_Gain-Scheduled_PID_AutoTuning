@@ -38,7 +38,7 @@ ControllerNode::ControllerNode(
     this->get_parameter("b3",b3_);
 
     velocity_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("vehicle_velocity", 1, std::bind(&ControllerNode::Gain_scheduled_callback, this, std::placeholders::_1));
-    target_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("reference_signal", 1, std::bind(&ControllerNode::reference_callback, this, std::placeholders::_1));
+    target_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("/MotionPlanning", 1, std::bind(&ControllerNode::reference_callback, this, std::placeholders::_1));
     yaw_rate_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>("vehicle_state", 1, std::bind(&ControllerNode::yaw_rate_callback, this, std::placeholders::_1));
 
     controller_publisher_ = this->create_publisher<ackermann_msgs::msg::AckermannDriveStamped>("steering", 1);

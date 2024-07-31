@@ -12,10 +12,10 @@ def generate_launch_description():
         name='vehicle_node',
         output='screen',
         parameters=[{
-        'time_constant': 1.0,  # 時定数T
-        'DC_gain': 0.8,  # DCゲイン
-        'diff_time': 0.1,  # サンプリング時間
-        'vehicle_speed': 0.0,  # 初期車速
+        'a_coe': 0.36,  # 1.0/2.778
+        'b_coe': 0.01,  # 0.2778
+        'diff_time': 0.01,  # サンプリング時間
+        'vehicle_speed': 2.778,  # 初期車速
         'wheel_base': 1.0,  # ホイールベース
         }]
     )

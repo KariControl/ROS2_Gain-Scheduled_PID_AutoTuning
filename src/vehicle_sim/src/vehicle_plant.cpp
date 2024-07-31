@@ -27,7 +27,7 @@ VehiclePlant::VehiclePlant(
 
     // Subscriber
     str_angle_subscriber_=this->create_subscription<ackermann_msgs::msg::AckermannDriveStamped>("steering", 1, std::bind(&VehiclePlant::lateral_callback, this, std::placeholders::_1));
-    velocity_subscriber_=this->create_subscription<geometry_msgs::msg::TwistStamped>("Target_velocity", 1, std::bind(&VehiclePlant::Velocity_callback, this, std::placeholders::_1));
+    velocity_subscriber_=this->create_subscription<geometry_msgs::msg::TwistStamped>("/MotionPlanning", 1, std::bind(&VehiclePlant::Velocity_callback, this, std::placeholders::_1));
 }
 void VehiclePlant::Velocity_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
     geometry_msgs::msg::TwistStamped output_msg;// 車速メッセージ定義
