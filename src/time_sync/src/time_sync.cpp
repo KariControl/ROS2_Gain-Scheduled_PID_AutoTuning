@@ -25,12 +25,12 @@ void DataSynchronizer::callback(const geometry_msgs::msg::TwistStamped::ConstSha
     RCLCPP_INFO(this->get_logger(), "同期されたメッセージを受信しました。");
     RCLCPP_INFO(this->get_logger(), "スケジューリングパラメータ: %f m/s", vel_msg->twist.linear.x);
     RCLCPP_INFO(this->get_logger(), "出力: %f rad/s", yaw_rate_msg->angular_velocity.z);
-    RCLCPP_INFO(this->get_logger(), "入力: %f m/s", str_msg->drive.steering_angle);
+    RCLCPP_INFO(this->get_logger(), "入力: %f rad", str_msg->drive.steering_angle);
 
     gs_controller_msgs::msg::GsController output_msg;
     output_msg.header.stamp = vel_msg->header.stamp;
     output_msg.header.frame_id = "base_link";
-    output_msg.output = yaw_rate_msg->angular_velocity.x; 
+    output_msg.output = yaw_rate_msg->angular_velocity.z; 
     output_msg.input = str_msg->drive.steering_angle;
     output_msg.gs_parameter = vel_msg->twist.linear.x; 
     plant_publisher_->publish(output_msg);
