@@ -16,26 +16,26 @@ ControllerNode::ControllerNode(
     this->declare_parameter("ki", 0.3);        // デフォルト値として0.01を設定
     this->declare_parameter("dt", 0.01);        // デフォルト値として0.05を設定
 
-    this->declare_parameter("a1", 0.0);        // 比例ゲインスケジュール則ハイパーパラメータ1
-    this->declare_parameter("a2", 0.0);        // 比例ゲインスケジュール則ハイパーパラメータ2
-    this->declare_parameter("a3", 0.01);        // 比例ゲインスケジュール則ハイパーパラメータ3
+    this->declare_parameter("wP0", 0.0);        // 比例ゲインスケジュール則ハイパーパラメータ1
+    this->declare_parameter("wP1", 0.0);        // 比例ゲインスケジュール則ハイパーパラメータ2
+    this->declare_parameter("wP2", 0.01);        // 比例ゲインスケジュール則ハイパーパラメータ3
 
-    this->declare_parameter("b1", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ1
-    this->declare_parameter("b2", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ2
-    this->declare_parameter("b3", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ3
+    this->declare_parameter("wI0", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ1
+    this->declare_parameter("wI1", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ2
+    this->declare_parameter("wI2", 0.0);        // 積分ゲインスケジュール則ハイパーパラメータ3
 
     this->get_parameter("set_point",setpoint_);
     this->get_parameter("kp",kp_);
     this->get_parameter("ki",ki_);
     this->get_parameter("dt",dt_);
 
-    this->get_parameter("a1",a1_);
-    this->get_parameter("a2",a2_);
-    this->get_parameter("a3",a3_);
+    this->get_parameter("wP0",wP0_);
+    this->get_parameter("wP1",wP1_);
+    this->get_parameter("wP2",wP2_);
 
-    this->get_parameter("b1",b1_);
-    this->get_parameter("b2",b2_);
-    this->get_parameter("b3",b3_);
+    this->get_parameter("wI0",wI0_);
+    this->get_parameter("wI1",wI1_);
+    this->get_parameter("wI2",wI2_);
 
     velocity_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("vehicle_velocity", 1, std::bind(&ControllerNode::Gain_scheduled_callback, this, std::placeholders::_1));
     target_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("/MotionPlanning", 1, std::bind(&ControllerNode::reference_callback, this, std::placeholders::_1));
@@ -48,8 +48,8 @@ ControllerNode::ControllerNode(
 }
 void ControllerNode::Gain_scheduled_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
     velocity_ = msg->twist.linear.x;
-    kp_=a1_+a2_*velocity_+a3_*velocity_*velocity_;
-    ki_=b1_+b2_*velocity_+b3_*velocity_*velocity_;
+    kp_=wP0_+wP1_*velocity_+wP2_*velocity_*velocity_;
+    ki_=wI0_+wI1_*velocity_+wI2_*velocity_*velocity_;
 }
 void ControllerNode::yaw_rate_callback(const sensor_msgs::msg::Imu::SharedPtr msg) {
     yaw_rate_ = msg->angular_velocity.z;

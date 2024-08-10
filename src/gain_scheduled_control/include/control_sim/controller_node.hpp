@@ -35,10 +35,10 @@ private:
   double dt_;
   double setpoint_;
   double integral_;
-  double a1_;
-  double a2_;
-  double a3_;
-  double b1_;
-  double b2_;
-  double b3_;
+  double wP0_;
+  double wP1_;
+  double wP2_;
+  double wI0_;
+  double wI1_;
+  double wI2_;
 };
