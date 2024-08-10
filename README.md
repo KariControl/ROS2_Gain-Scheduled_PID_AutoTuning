@@ -32,7 +32,7 @@ ROS version:ROS 2 humble
 # ノード構成
 本ソフトのノード構成を下記のグラフに示す。例題の関係上，制御対象の出力データのトピックが/vehicle_state，入力データのトピックが/steering，時変パラメータのトピックが/vehicle_velocityとなっている。/plant_infoが時刻同期済みの入出力信号におけるカスタムメッセージでのトピックとである。
 
-![node](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/cd5b62f3-b0b1-43fc-96a1-97fe1a7ddc26)
+![image](https://github.com/user-attachments/assets/a2f99119-950f-41d9-8c8c-743cd2624623)
 
 # 例題の実行手順
 1.ビルド
@@ -60,13 +60,13 @@ source run_PID_tuning.sh
 
 正常に実行ができた場合，下記のようにターミナル上にてPIDゲインの調整結果が表示される。
 
-![result](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/ecedffd0-b6bf-43ec-a4e8-67f9b9e70476)
+![image](https://github.com/user-attachments/assets/d9c1ddda-652b-4fde-a910-6ce80427cce9)
 
 4.ゲイン調整結果の確認
 launchファイル(control_run.py)のパラメータを変更し，下記のコマンドを実行して制御器調整後の制御応答を確認する。
 
 ```
-source run_velocity_control_sim.sh
+source run_yaw_rate_control_sim.sh
 ```
 
 # 例題におけるゲイン調整結果例
