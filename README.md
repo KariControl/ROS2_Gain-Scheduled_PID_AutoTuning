@@ -34,10 +34,20 @@ ROS version:ROS 2 humble
 
 ![image](https://github.com/user-attachments/assets/a2f99119-950f-41d9-8c8c-743cd2624623)
 
-# 制御器
+# ゲインスケジュールド制御器
+今回対象とする制御器は多項式ゲインスケジュールドによるPI制御である。制御則が
 ```math
-u_{t}=L\left(K_{P}(t)}e(t)+K_{I}(t) \frac{1}{s}\right)
+u(t)=K_{P}(t)e(t)+K_{I} (t) \int_{0}^{t} e(\tau)d\tau 
 ```
+```math
+K_{P}(t)=w_{P0}+w_{P1}x(t)+w_{P2}x^2(t) 
+```
+```math
+K_{I}(t)=w_{I0}+w_{I1}x(t)+w_{I2}x^2(t) 
+```
+となる。$`e(t)`$と$`u(t)`$が偏差と制御入力である。$`x(t)`$が制御対象の時変パラメータである。$`w_{Pi}{i=0,1,2}`$と$`w_{Ii}{i=0,1,2}`$が可調整パラメータとなる。 
+
+本ツールでは一組の実験データのみを用いて可調整パラメータをオフラインで自動調整する。
 
 # 例題の実行手順
 1.ビルド
@@ -56,57 +66,22 @@ source run_yaw_rate_control_sim.sh
 
 なお，本例題ではlaunchファイル(control_run.py)にて例題の制御器におけるパラメータを設定している。rosbagデータの入出力応答を変更する場合，launchファイル上のパラメータを変更して実行する必要がある。
 
-3.PIDゲイン調整
+3.ゲイン調整
 シェルスクリプト(source run_PID_tuning.sh)内のrosbag名を該当ファイル名に変更する。launchファイル(pid_tuner.py)にて，参照モデル(time_const)の時定数とデータ数(読み込むデータの最大データ点数max_data_points)を設定する。下記のコマンドを実行してrosbagデータからパラメータをオフライン計算する。
 
 ```
 source run_PID_tuning.sh
 ```
 
-正常に実行ができた場合，下記のようにターミナル上にてPIDゲインの調整結果が表示される。
+正常に実行ができた場合，下記のようにターミナル上にてゲインの調整結果が表示される。
 
-![image](https://github.com/user-attachments/assets/d9c1ddda-652b-4fde-a910-6ce80427cce9)
+![image](https://github.com/user-attachments/assets/7bde1a65-d527-40c0-9c18-2d37cb32b7d8)
 
 4.ゲイン調整結果の確認
 launchファイル(control_run.py)のパラメータを変更し，下記のコマンドを実行して制御器調整後の制御応答を確認する。
 
 ```
 source run_yaw_rate_control_sim.sh
-```
-
-# 例題の実行手順
-1.ビルド
-mainブランチをクローンして，下記のコマンドを実行する。
-
-```
-source build_setup.sh
-```
-
-2.初期入出力データの測定(rosbagの準備)
-下記のコマンドを実行して例題用の入出力データ(rosbag)を生成しておく。
-
-```
-source run_velocity_control_sim.sh
-```
-
-なお，本例題ではlaunchファイル(control_run.py)にて例題の制御器におけるPIDゲインを設定している。rosbagデータの入出力応答を変更する場合，launchファイル上のパラメータを変更して実行する必要がある。
-
-3.PIDゲイン調整
-シェルスクリプト(source run_PID_tuning.sh)内のrosbag名を該当ファイル名に変更する。launchファイル(pid_tuner.py)にて，参照モデル(time_const)の時定数とデータ数(読み込むデータの最大データ点数max_data_points)を設定する。下記のコマンドを実行してrosbagデータからPIDゲインをオフライン計算する。
-
-```
-source run_PID_tuning.sh
-```
-
-正常に実行ができた場合，下記のようにターミナル上にてPIDゲインの調整結果が表示される。
-
-![result](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/ecedffd0-b6bf-43ec-a4e8-67f9b9e70476)
-
-4.ゲイン調整結果の確認
-launchファイル(control_run.py)のPIDゲインを変更し，下記のコマンドを実行して制御器調整後の制御応答を確認する。
-
-```
-source run_velocity_control_sim.sh
 ```
 
 # 例題におけるゲイン調整結果例
