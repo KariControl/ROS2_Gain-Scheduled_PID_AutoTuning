@@ -109,7 +109,7 @@ $`K_{P}=1.0`$，$`K_{I}=0.0`$の条件下にて初期入出力応答データを
 調整後パラメータを適用することにより，下記のような制御応答を得られる。
 
 ![image](https://github.com/user-attachments/assets/66449c59-e967-47fd-8bae-feb29e13bf29)
+パラメータ調整後の閉ループ応答(青：出力、黄色：目標値、赤：参照モデル応答)
 
 ![image](https://github.com/user-attachments/assets/faca9877-244f-4fed-8acc-88e54323ec99)
-
-パラメータ調整後の閉ループ応答(青：出力、黄色：目標値、赤：参照モデル応答)
+PIゲインの応答(上図：Pゲイン、下図：Iゲイン)
