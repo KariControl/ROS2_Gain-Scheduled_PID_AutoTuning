@@ -3,6 +3,7 @@
 
 参考文献：
 Yahagi, S., & Kajiwara, I. (2021). Direct tuning of gain-scheduled controller for electro-pneumatic clutch position control. Advances in Mechanical Engineering, 13(8), 16878140211036017.
+Yahagi, S., & Suzuki, M. (2023). Controller parameter tuning for gain‐scheduled vehicle yaw‐rate control: Virtual reference feedback tuning approach. Electronics Letters, 59(6), e12764.
 
 本ソフトにおけるqiita記事：人気だったら書くかも...
 
