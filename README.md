@@ -2,7 +2,7 @@
 本ソフトウェアはROS 2のrosbagファイルで保存した入出力とゲインスケジュールドパラメータのデータを用いてゲインスケジュールド制御を調整する自動調整ソフトである。ゲインスケジュールド制御調整用のパッケージ、サンプルのプラント・制御器のパッケージ、実行用スクリプトから構成されている。
 
 参考文献：
-Yahagi, S., & Suzuki, M. (2023). Controller parameter tuning for gain‐scheduled vehicle yaw‐rate control: Virtual reference feedback tuning approach. Electronics Letters, 59(6), e12764.
+Yahagi, S., & Kajiwara, I. (2021). Direct tuning of gain-scheduled controller for electro-pneumatic clutch position control. Advances in Mechanical Engineering, 13(8), 16878140211036017.
 
 本ソフトにおけるqiita記事：人気だったら書くかも...
 
@@ -32,7 +32,7 @@ ROS version:ROS 2 humble
 # ノード構成
 本ソフトのノード構成を下記のグラフに示す。例題の関係上，制御対象の出力データのトピックが/vehicle_state，入力データのトピックが/steering，時変パラメータのトピックが/vehicle_velocityとなっている。/plant_infoが時刻同期済みの入出力信号におけるカスタムメッセージでのトピックとである。
 
-![image](https://github.com/user-attachments/assets/a2f99119-950f-41d9-8c8c-743cd2624623)
+![image](https://github.com/user-attachments/assets/6b14a3c5-8e2d-4122-bc88-93a211587989)
 
 # 制御器と参照モデル
 今回対象とする制御器は多項式ゲインスケジュールドによるPI制御である。制御則が
@@ -89,20 +89,18 @@ source run_yaw_rate_control_sim.sh
 # 例題におけるゲイン調整結果例
 本例題ではモーションプロファイルとして目標値と時変パラメータである車速が事前設定されている。
 
-![image](https://github.com/user-attachments/assets/bc578462-3b73-45f4-b79f-e9b7064f4f98)
-
+![image](https://github.com/user-attachments/assets/ca4e1b9f-80c8-457c-964f-137db254e1df)
 モーションプロファイル(上図：目標値、下図：時変パラメータ)
 
 $`K_{P}=1.0`$，$`K_{I}=0.0`$の条件下にて初期入出力応答データを測定すると，下記のような制御応答を得られる。
 
-![image](https://github.com/user-attachments/assets/38c2ee47-1f02-4f38-bb05-71d5e1c576be)
-
+![image](https://github.com/user-attachments/assets/8de47288-b818-4f7b-a34e-4836cc17d6da)
 初期実験データ(青：出力、黄色：目標値、赤：参照モデル応答)
 
 本条件下で得られたrosbagデータを用いてゲイン調整を実施することにより，制御器のパラメータを自動調整できる。ただし，最大データ点数は4500であり，参照モデルの時定数を0.5sと設定している。調整後パラメータを適用することにより，下記のような制御応答を得られる。
 
-![image](https://github.com/user-attachments/assets/66449c59-e967-47fd-8bae-feb29e13bf29)
+![image](https://github.com/user-attachments/assets/cb1a5629-6e90-4dbd-9f6c-cc0591ac5272)
 パラメータ調整後の閉ループ応答(青：出力、黄色：目標値、赤：参照モデル応答)
 
-![image](https://github.com/user-attachments/assets/faca9877-244f-4fed-8acc-88e54323ec99)
+![image](https://github.com/user-attachments/assets/fe9a21ee-ada4-4a33-a63e-09ba040ae0e1)
 PIゲインの応答(上図：Pゲイン、下図：Iゲイン)
