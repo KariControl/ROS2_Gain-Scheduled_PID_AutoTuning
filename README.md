@@ -72,11 +72,15 @@ source run_velocity_control_sim.sh
 # 例題におけるゲイン調整結果例
 $`K_{P}=1.4`$，$`K_{I}=0.0`$，$`K_{D}=0.0`$の条件下にて初期入出力応答データを測定すると，下記のような制御応答を得られる。
 
-![initial](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/6c28fdab-cd2b-4040-97ab-78a99d73f2da)
-         
+![image](https://github.com/user-attachments/assets/bc578462-3b73-45f4-b79f-e9b7064f4f98)
+
+![image](https://github.com/user-attachments/assets/38c2ee47-1f02-4f38-bb05-71d5e1c576be)
+      
 本条件下で得られたrosbagデータを用いてゲイン調整を実施することにより，ゲイン調整結果を$`K_{P}=0.766527`$，$`K_{I}=0.0`$，$`K_{D}=0.728840`$と得られる。ただし，最大データ点数は150であり，参照モデルの時定数を1.5sと設定している。調整後ゲインを適用することにより，下記のような制御応答を得られる。
 
-![tuning](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/6937cf45-48da-43f7-8ee2-963d763a00a5)
+![image](https://github.com/user-attachments/assets/66449c59-e967-47fd-8bae-feb29e13bf29)
+
+![image](https://github.com/user-attachments/assets/faca9877-244f-4fed-8acc-88e54323ec99)
 
 # 注意事項
 ### 自前のrosbag(例題以外への適用)使用時の注意
