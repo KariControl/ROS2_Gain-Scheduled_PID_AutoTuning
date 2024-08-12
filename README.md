@@ -69,11 +69,50 @@ launchファイル(control_run.py)のパラメータを変更し，下記のコ�
 source run_yaw_rate_control_sim.sh
 ```
 
+# 例題の実行手順
+1.ビルド
+mainブランチをクローンして，下記のコマンドを実行する。
+
+```
+source build_setup.sh
+```
+
+2.初期入出力データの測定(rosbagの準備)
+下記のコマンドを実行して例題用の入出力データ(rosbag)を生成しておく。
+
+```
+source run_velocity_control_sim.sh
+```
+
+なお，本例題ではlaunchファイル(control_run.py)にて例題の制御器におけるPIDゲインを設定している。rosbagデータの入出力応答を変更する場合，launchファイル上のパラメータを変更して実行する必要がある。
+
+3.PIDゲイン調整
+シェルスクリプト(source run_PID_tuning.sh)内のrosbag名を該当ファイル名に変更する。launchファイル(pid_tuner.py)にて，参照モデル(time_const)の時定数とデータ数(読み込むデータの最大データ点数max_data_points)を設定する。下記のコマンドを実行してrosbagデータからPIDゲインをオフライン計算する。
+
+```
+source run_PID_tuning.sh
+```
+
+正常に実行ができた場合，下記のようにターミナル上にてPIDゲインの調整結果が表示される。
+
+![result](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/ecedffd0-b6bf-43ec-a4e8-67f9b9e70476)
+
+4.ゲイン調整結果の確認
+launchファイル(control_run.py)のPIDゲインを変更し，下記のコマンドを実行して制御器調整後の制御応答を確認する。
+
+```
+source run_velocity_control_sim.sh
+```
+
 # 例題におけるゲイン調整結果例
 $`K_{P}=1.4`$，$`K_{I}=0.0`$，$`K_{D}=0.0`$の条件下にて初期入出力応答データを測定すると，下記のような制御応答を得られる。
 
-![initial](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/6c28fdab-cd2b-4040-97ab-78a99d73f2da)
-         
+![image](https://github.com/user-attachments/assets/bc578462-3b73-45f4-b79f-e9b7064f4f98)
+
+![image](https://github.com/user-attachments/assets/38c2ee47-1f02-4f38-bb05-71d5e1c576be)
+      
 本条件下で得られたrosbagデータを用いてゲイン調整を実施することにより，ゲイン調整結果を$`K_{P}=0.766527`$，$`K_{I}=0.0`$，$`K_{D}=0.728840`$と得られる。ただし，最大データ点数は150であり，参照モデルの時定数を1.5sと設定している。調整後ゲインを適用することにより，下記のような制御応答を得られる。
 
-![tuning](https://github.com/KariControl/ROS2_PID_AutoTuning_VRFT/assets/118587431/6937cf45-48da-43f7-8ee2-963d763a00a5)
+![image](https://github.com/user-attachments/assets/66449c59-e967-47fd-8bae-feb29e13bf29)
+
+![image](https://github.com/user-attachments/assets/faca9877-244f-4fed-8acc-88e54323ec99)
