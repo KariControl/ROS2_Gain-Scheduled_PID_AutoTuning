@@ -34,6 +34,11 @@ ROS version:ROS 2 humble
 
 ![image](https://github.com/user-attachments/assets/a2f99119-950f-41d9-8c8c-743cd2624623)
 
+# 制御器
+```math
+u_{t}=L\left(K_{P}(t)}e(t)+K_{I}(t) \frac{1}{s}\right)
+```
+
 # 例題の実行手順
 1.ビルド
 mainブランチをクローンして，下記のコマンドを実行する。
