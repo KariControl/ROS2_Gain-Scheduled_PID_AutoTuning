@@ -1,5 +1,5 @@
 # はじめに
-本ソフトウェアはROS 2のrosbagファイルで保存した入出力データを用いてPIDゲインを調整する自動調整ソフトである。PIDゲイン調整用のパッケージ、サンプルのプラント・制御器のパッケージ、実行用スクリプトから構成されている。
+本ソフトウェアはROS 2のrosbagファイルで保存した入出力とゲインスケジュールドパラメータのデータを用いてゲインスケジュールド制御を調整する自動調整ソフトである。ゲインスケジュールド制御調整用のパッケージ、サンプルのプラント・制御器のパッケージ、実行用スクリプトから構成されている。
 
 参考文献：
 Yahagi, S., & Suzuki, M. (2023). Controller parameter tuning for gain‐scheduled vehicle yaw‐rate control: Virtual reference feedback tuning approach. Electronics Letters, 59(6), e12764.
